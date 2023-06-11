@@ -1,17 +1,21 @@
-/*****************************************************************//**
+/***********************************************************************
  * File: Rock.cpp
  * Author: B11115029白安睿 B11115046黃健嘉
- * Create Date: 2023/??/??
+ * Create Date: 2023/5/28
  * Editor: B11115029白安睿 B11115046黃健嘉
- * Update Date: 2023/06/11
- * Description: Implementing the functions in Rock class
- *********************************************************************/
+ * Update Date: 2023/6/11
+ * Description: The implement of Rock.h
+ * ***********************************************************************/
 #include "Rock.h"
 
-//Default constructor
+/**
+ * Intent: If the hero and rock are in the same position, update the hero's HP
+ * Pre: 
+ * Post: Update hero's HP
+ * pram: Hero& hero
+ */
 Rock::Rock()
 {
-	//Initialize all data
 	this->hp = 0;
 	this->hpLimit = 0;
 	this->icon = "¢à";
@@ -24,9 +28,8 @@ Rock::Rock()
 
 /**
  * Intent: If the hero and rock are in the same position, update the hero's HP
- * Pre: 
+ * Pre: A hero's reference
  * Post: Update hero's HP
- * pram: Hero& hero
  */
 void Rock::update(Hero& hero)
 {
