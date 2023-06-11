@@ -1,32 +1,42 @@
-/*****************************************************************//**
+/***********************************************************************
  * File: Trigger.cpp
  * Author: B11115029白安睿 B11115046黃健嘉
- * Create Date: 2023/??/??
+ * Create Date: 2023/5/28
  * Editor: B11115029白安睿 B11115046黃健嘉
- * Update Date: 2023/06/11
- * Description: Implementing the functions in Trigger class
- *********************************************************************/
+ * Update Date: 2023/6/11
+ * Description: The implement of Trigger.h
+ * ***********************************************************************/
 #include "Trigger.h"
 
-// Default constructor
+ /**
+ * Intent: Initialize the Trrigger
+ * Pre: None
+ * Post: The Trigger will be initialize to specified value
+ */
 Trigger::Trigger()
 {
-	// Initialize icon and exp
 	this->icon = "¢â";
 	this->exp = 10;
 }
 
-// Give the initial position to build the constructor
+/**
+ * Intent: Set trigger's position, icon and exp
+ * Pre: Two integer name x and y
+ * Post: The position of x will be set to input x,the position of y will be set to input y, and the icon and exp will be initialized
+ */
 Trigger::Trigger(int x, int y)
 {
-	// Initialize icon and exp and set initial position
 	this->icon = "¢â";
 	this->exp = 10;
 	this->pos.x = x;
 	this->pos.y = y;
 }
 
-// Copy constructor
+/**
+ * Intent: Set trigger
+ * Pre: A Trigger class
+ * Post: The trigger will be set to input trigger
+ */
 Trigger::Trigger(const Trigger& ref)
 {
 	// Set icon, exp and position
@@ -36,10 +46,9 @@ Trigger::Trigger(const Trigger& ref)
 }
 
 /**
- * Intent: If the hero and trigger are in the same position, update the hero's exp
- * Pre: 
- * Post: Update hero's exp
- * pram: Hero& hero
+ * Intent: Update the trigger and hero when the hero move
+ * Pre: A hero's reference
+ * Post: The hero's exp will be update when they at the same position
  */
 void Trigger::update(Hero& hero)
 {
@@ -52,55 +61,52 @@ void Trigger::update(Hero& hero)
 
 /**
  * Intent: Set the position of trigger
- * Pre: 
+ * Pre: A Position
  * Post: Set the position of trigger
- * pram: const Position& pos
  */
 void Trigger::setPos(const Position& pos)
 {
-	this->pos.x = pos.x; // Set trigger's x position
-	this->pos.y = pos.y; // Set trigger's y position
+	this->pos.x = pos.x;
+	this->pos.y = pos.y;
 }
 
 /**
- * Intent: Another method to set the position of trigger
- * Pre: 
- * Post: Set the position of trigger
- * pram1: int x
- * pram2: int y
+ * Intent: Set the position of trigger
+ * Pre: Two integers name x and y
+ * Post: The position of x will be set to input x,the position of y will be set to input y
  */
 void Trigger::setPos(int x, int y)
 {
-	this->pos.x = x; // Set trigger's x position
-	this->pos.y = y; // Set trigger's y position
+	this->pos.x = x;
+	this->pos.y = y;
 }
 
 /**
  * Intent: Get the trigger's position
- * Pre: Each time you run an update in main function
- * Post: Return the trigger's position
+ * Pre: None
+ * Post: Return the position of trigger
  */
 Position Trigger::getPos() const
 {
-	return this->pos; // Return trigger's position
+	return this->pos;
 }
 
 /**
- * Intent: Get the trigger's symbol
- * Pre: Each time you run an update in main function
- * Post: Return the trigger's symbol
+ * Intent: Get the trigger's icon
+ * Pre: None
+ * Post: Return the icon of trigger
  */
 string Trigger::getIcon() const
 {
-	return this->icon; // Return trigger's symbol
+	return this->icon;
 }
 
 /**
  * Intent: Get the total amount of exp obtained by the hero
- * Pre: Each time you run an update in main function
+ * Pre: None
  * Post: Return the total amount of exp obtained by the hero
  */
 int Trigger::getExpAmount() const
 {
-	return this->exp; // Return the total amount of exp obtained by the hero
+	return this->exp;
 }
