@@ -16,6 +16,7 @@ Trigger::Trigger()
 	this->exp = 10;
 }
 
+// Give the initial position to build the constructor
 Trigger::Trigger(int x, int y)
 {
 	// Initialize icon and exp and set initial position
@@ -25,9 +26,10 @@ Trigger::Trigger(int x, int y)
 	this->pos.y = y;
 }
 
+// Copy constructor
 Trigger::Trigger(const Trigger& ref)
 {
-	// set icon, exp and position
+	// Set icon, exp and position
 	this->icon = ref.icon;
 	this->exp = ref.exp;
 	this->pos = ref.pos;
