@@ -1,7 +1,16 @@
-﻿#include "main.h"
+﻿/***********************************************************************
+ * File: main.cpp
+ * Author: B11115029 白安睿
+ * Create Date: 2023/
+ * Editor: B11115029 白安睿
+ * Update Date: 2023/
+ * Description: The main process of the game.
+ * ***********************************************************************/
+#include "main.h"
 
 using namespace std;
 
+//declare necessary object
 Hero hero;
 Creature* creature;
 Potion* potion;
@@ -9,29 +18,39 @@ Sword* sword;
 Ghost* ghost;
 Rock* rock;
 
+//declare the array to manage the object
 vector<Trigger*> triggers;
 vector<Creature*> creatures;
 vector<Item*> items;
 
+//2D dynamic board
 string** board;
+
+//2D dynamic to check the board
 int** used;
 
+//the wall and road
 const string wall = "\u2588 ";
 const string road = "　";
 
+//row and column
 int row = 0, col = 0;
 
+//game level
 int level = 0;
 
+//time log
 const double timeLog = 0.033;
 
+//4 directions
 vector<pair<int, int>> dir = {
-	{0, 1},   // 下
-	{0, -1},  // 上
-	{-1, 0},  // 左
-	{1, 0}    // 右
+	{0, 1},   // down
+	{0, -1},  // up
+	{-1, 0},  // left
+	{1, 0}    // right
 };
 
+//input enum
 enum validInput
 {
 	EW = 0,
@@ -45,21 +64,27 @@ enum validInput
 	INVALID,
 };
 
+
 int main()
 {
+	//initialize time,row and column
 	srand(time(NULL));
 	row = 19;
 	col = 19;
 
+	//set all input to false
 	bool gKeyState[validInput::INVALID];
 	for (int i = 0; i < validInput::INVALID; i++)
 	{
 		gKeyState[i] = false;
 	}
+
+	//clean screen
 	system("CLS");
 	cout << "Welcome to Round 1" << endl;
 	if (level == 0)
 	{
+		//initialize game
 		setupBoard(row, col);
 		printBoard();
 	}
@@ -67,6 +92,7 @@ int main()
 	startT = clock();
 	endT = clock();
 
+	//when level is 0
 	while (!gKeyState[validInput::EESC] && level == 0)
 	{
 		// Compute the time lap
@@ -93,6 +119,8 @@ int main()
 			gKeyState[validInput::ELoad] = false;
 		}
 	}
+
+	//if next level,then set the board again,the map is bigger
 	if (level == 1)
 	{
 		row = 21;
@@ -100,9 +128,12 @@ int main()
 		setupBoard(row, col);
 		printBoard();
 	}
+	//clean the screen and output the messsage
 	system("CLS");
 	cout << "Welcome to Round 2" << endl;
 	cout << "Press Any Key to Start the Round" << endl;
+
+	//when game level is 1
 	while (!gKeyState[validInput::EESC] && level == 1)
 	{
 		// Compute the time lap
@@ -119,16 +150,18 @@ int main()
 		keyUpdate(gKeyState);
 		endT = clock();
 
-		//if (gKeyState[validInput::ESave])
-		//{
-		//	saveMap();
-		//	gKeyState[validInput::ESave] = false;
-		//}
-		//else if (gKeyState[validInput::ELoad]) {
-		//	loadMap();
-		//	gKeyState[validInput::ELoad] = false;
-		//}
+		if (gKeyState[validInput::ESave])
+		{
+			saveMap();
+			gKeyState[validInput::ESave] = false;
+		}
+		else if (gKeyState[validInput::ELoad]) {
+			loadMap();
+			gKeyState[validInput::ELoad] = false;
+		}
 	}
+
+	//if next level,then set board again,the map is bigger
 	if (level == 2)
 	{
 		row = 25;
@@ -136,9 +169,13 @@ int main()
 		setupBoard(row, col);
 		printBoard();
 	}
+
+	//clean the screen and output the messsage
 	system("CLS");
 	cout << "Welcome to Round 3" << endl;
 	cout << "Press Any Key to Start the Round" << endl;
+
+	//if level 2
 	while (!gKeyState[validInput::EESC] && level == 2)
 	{
 		// Compute the time lap
@@ -155,39 +192,51 @@ int main()
 		keyUpdate(gKeyState);
 		endT = clock();
 
-		//if (gKeyState[validInput::ESave])
-		//{
-		//	saveMap();
-		//	gKeyState[validInput::ESave] = false;
-		//}
-		//else if (gKeyState[validInput::ELoad]) {
-		//	loadMap();
-		//	gKeyState[validInput::ELoad] = false;
-		//}
+		if (gKeyState[validInput::ESave])
+		{
+			saveMap();
+			gKeyState[validInput::ESave] = false;
+		}
+		else if (gKeyState[validInput::ELoad]) {
+			loadMap();
+			gKeyState[validInput::ELoad] = false;
+		}
 	}
-	level++;
+	cout << "You Win!" << endl;
 	system("pause");
 	return 0;
 }
 
+// Intent: Update the input key
+// Pre: a bool array which include the valid input
+// Post: the specified key will be set to true
 void keyUpdate(bool key[])
 //==================================================================
 {
+	//if creature's HP is 0,then next level
 	if (creatures[0]->getHP() == 0)
 	{
 		level++;
 		return;
 	}
+
+	//if hero's HP is 0,then you lose
 	else if (hero.getHP() == 0)
 	{
 		cout << "You Lose..." << endl;
 		system("Pause");
 	}
+
+	//set all key to false before read the input
 	for (int i = 0; i < validInput::INVALID; i++)
 	{
 		key[i] = false;
 	}
+
+	//read the input without enter
 	char input = _getch();
+
+	//set the specified key to true
 	switch (input)
 	{
 	case 'w':
@@ -219,16 +268,24 @@ void keyUpdate(bool key[])
 	}
 }
 
+// Intent: check the move position is valid or not
+// Pre: A position reference named pos
+// Post: if the position is invalid,then throw the exception message
 void isPositionValid(Position& pos)
 {
+	//you can't step on wall
 	if (board[pos.y][pos.x] != road && board[pos.y][pos.x] != "Ｔ" && board[pos.y][pos.x] != "Ｃ" && board[pos.y][pos.x] != "Ｐ" && board[pos.y][pos.x] != "Ｓ" && board[pos.y][pos.x] != "Ｒ")
 	{
 		throw exception("Invalid Location");
 	}
 }
 
+// Intent: Check the input key is valid or not
+// Pre: a bool array which store the valid key status
+// Post: if the key is invalid,then throw the exception message
 void isInputValid(bool key[])
 {
+	//check all valid key
 	bool allInvalid = true;
 	for (int i = 0; i < validInput::INVALID; i++)
 	{
@@ -238,12 +295,16 @@ void isInputValid(bool key[])
 			break;
 		}
 	}
+	//if there aren't any valid key,then throw the message
 	if (allInvalid)
 	{
 		throw exception("Invalid Input");
 	}
 }
 
+// Intent: Draw the game information
+// Pre: None.
+// Post: The important information will be printed
 void drawInfo()
 {
 	cout << "--------------------------------------------------------" << endl;
@@ -264,36 +325,46 @@ void drawInfo()
 	cout << "--------------------------------------------------------" << endl;
 }
 
+// Intent: Update the game
+// Pre: a bool array which include all valid input
+// Post: The whole game will be updated
 void update(bool key[])
 //==================================================================
 {
-	// 清除版面
+	// clean the screen
 	system("CLS");
 
 	Position delta;
 
-	// 是否有input
+	// check there's input or not
 	bool hasInput = false;
+
+	//if key w is been pressed,then set delta
 	if (key[validInput::EW])
 	{
 		delta -= Position(0, 1);
 		hasInput = true;
 	}
+	//if key s is been pressed,then set delta
 	else if (key[validInput::ES])
 	{
 		delta += Position(0, 1);
 		hasInput = true;
 	}
+	//if key a is been pressed,then set delta
 	else if (key[validInput::EA])
 	{
 		delta = delta - Position(1, 0);
 		hasInput = true;
 	}
+	//if key d is been pressed,then set delta
 	else if (key[validInput::ED])
 	{
 		delta = delta + Position(1, 0);
 		hasInput = true;
 	}
+
+	//check the input valid or not
 	else
 	{
 		try
@@ -305,6 +376,8 @@ void update(bool key[])
 			cout << e.what() << endl;
 		}
 	}
+
+	//check the input move is valid or not,if valid,then move the hero
 	if (hasInput)
 	{
 		try
@@ -319,8 +392,7 @@ void update(bool key[])
 		}
 	}
 
-	// Manipulate update of two triggers using while loop
-
+	// update all object
 	for (int i = 0; i < triggers.size(); i++) {
 		triggers[i]->update(hero);
 	}
@@ -334,9 +406,14 @@ void update(bool key[])
 	{
 		items[i]->update(hero);
 	}
+
+	//print the board
 	printBoard();
 }
 
+// Intent: Generate a maze. Given the starting coordinates (x, y), this function generates a maze using a recursive algorithm.
+// Pre: 'x' and 'y' are valid coordinates within the maze boundaries.
+// Post: The maze is generated with paths and walls based on the recursive algorithm.
 void generateMaze(int x, int y)
 {
 	// Set the current position as nothing (path) and mark it as used
@@ -370,6 +447,9 @@ void generateMaze(int x, int y)
 	}
 }
 
+// Intent: Initialize the used board
+// Pre: None.
+// Post: the used board will be set based on row and column
 void setUsed()
 {
 	used = new int* [row];
@@ -389,6 +469,9 @@ void setUsed()
 	}
 }
 
+// Intent: Dynamic generate the game board
+// Pre: None
+// Post: the game board will be set based on row and column 
 void setMaze()
 {
 	board = new string * [row];
@@ -402,84 +485,115 @@ void setMaze()
 	}
 }
 
+// Intent: Ghost move.
+// Pre: row and column
+// Post: The ghost will move randomly on valid lattice
 void ghostMove(int row, int col)
 {
+	//make a valid flag array to check the lattice valid or not
 	board[ghost->getPos().y][ghost->getPos().x] = "　";
 	vector<vector<bool>> validFlags(row);
-	for (int i = 0; i < row; i++) {
+	for (int i = 0; i < row; i++) 
+	{
 		validFlags[i].resize(col);
-		for (int j = 0; j < col; j++) {
+		for (int j = 0; j < col; j++) 
+		{
 			validFlags[i][j] = board[i][j] == wall ? false : true;
 		}
 	}
 
+	//get random position
 	auto getRandomPos = [&row, &col]() {
 		return Position((int)(rand() % col), (int)(rand() % row));
 	};
 
-	auto getValidRandomPos = [&validFlags, &getRandomPos]() {
-		while (true) {
+	//get a valid random position
+	auto getValidRandomPos = [&validFlags, &getRandomPos]() 
+	{
+		while (true) 
+		{
 			Position pos = getRandomPos();
-			if (validFlags[pos.y][pos.x]) {
+			if (validFlags[pos.y][pos.x]) 
+			{
 				return pos;
 			}
 		}
 	};
 
+	//ghost go to new position
 	Position gPos = getValidRandomPos();
 	validFlags[gPos.y][gPos.x] = false;
 	ghost->setPos(gPos);
 }
 
+// Intent: Initialize the game board
+// Pre: row and column
+// Post: The game board will be initialized and put the object on
 void setupBoard(int row, int col)
 {
+	//initialize the necessary array and generate the game board
 	setUsed();
 	setMaze();
 	generateMaze(1, 1);
 
+	//make a valid flag array to check the lattice valid or not
 	vector<vector<bool>> validFlags(row);
-	for (int i = 0; i < row; i++) {
+	for (int i = 0; i < row; i++)
+	{
 		validFlags[i].resize(col);
-		for (int j = 0; j < col; j++) {
+		for (int j = 0; j < col; j++) 
+		{
 			validFlags[i][j] = board[i][j] == wall ? false : true;
 		}
 	}
 
-	auto getRandomPos = [&row, &col]() {
+	//get a random position
+	auto getRandomPos = [&row, &col]() 
+	{
 		return Position((int)(rand() % col), (int)(rand() % row));
 	};
 
-	auto getValidRandomPos = [&validFlags, &getRandomPos]() {
-		while (true) {
+	//get a valid random position
+	auto getValidRandomPos = [&validFlags, &getRandomPos]() 
+	{
+		while (true) 
+		{
 			Position pos = getRandomPos();
-			if (validFlags[pos.y][pos.x]) {
+			if (validFlags[pos.y][pos.x]) 
+			{
 				return pos;
 			}
 		}
 	};
+
+	//clear all object
 	triggers.clear();
 	creatures.clear();
 	items.clear();
 	validFlags[hero.getPos().y][hero.getPos().x] = false;
 
+	//put creature randomly
 	creature = new Creature();
 	Position cPos = getValidRandomPos();
 	validFlags[cPos.y][cPos.x] = false;
 	creature->setPos(cPos);
 	creatures.push_back(creature);
 
+	//put ghost randomly
 	ghost = new Ghost();
 	Position gPos = getValidRandomPos();
 	validFlags[gPos.y][gPos.x] = false;
 	ghost->setPos(gPos);
 	creatures.push_back(ghost);
 
+	//put rock randomly
 	rock = new Rock();
 	Position rPos = getValidRandomPos();
 	validFlags[rPos.y][rPos.x] = false;
 	rock->setPos(rPos);
 	creatures.push_back(rock);
 
+	//put triggers randomly
 	for (int i = 0; i < 2; i++) {
 		Trigger* trigger = new Trigger();
 		Position tPos = getValidRandomPos();
@@ -488,12 +602,14 @@ void setupBoard(int row, int col)
 		triggers.push_back(trigger);
 	}
 
+	//put potion randomly
 	potion = new Potion();
 	Position pPos = getValidRandomPos();
 	validFlags[pPos.y][pPos.x] = false;
 	potion->setPos(pPos);
 	items.push_back(potion);
 
+	//put sword randomly
 	sword = new Sword();
 	Position sPos = getValidRandomPos();
 	validFlags[sPos.y][sPos.x] = false;
@@ -501,9 +617,15 @@ void setupBoard(int row, int col)
 	items.push_back(sword);
 }
 
+// Intent: Print the game board
+// Pre: None
+// Post: The game board with object will be printed
 void printBoard()
 {
+	//move the ghost
 	ghostMove(row, col);
+
+	//set the specified lattice with object's position
 	for (int i = 0; i < triggers.size(); i++)
 	{
 		board[triggers[i]->getPos().y][triggers[i]->getPos().x] = triggers[i]->getIcon();
@@ -520,6 +642,7 @@ void printBoard()
 	}
 	board[hero.getPos().y][hero.getPos().x] = hero.getIcon();
 
+	//print the board
 	for (int i = 0; i < row; i++)
 	{
 		for (int j = 0; j < col; j++)
@@ -528,15 +651,21 @@ void printBoard()
 		}
 		cout << endl;
 	}
+	//print the information behind the board
 	drawInfo();
 }
 
+// Intent: Save the map
+// Pre: None
+// Post: The information of game will be stored into input file name
 void saveMap()
 {
+	//clean the board
 	system("CLS");
 	cout << "Input file name for saving or Exit to leave saving." << std::endl;
 	cout << "Input: ";
 	string input;
+	//read the input
 	cin >> input;
 	if (input.compare("Exit") == 0)
 	{
