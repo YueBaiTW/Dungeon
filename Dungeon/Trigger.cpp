@@ -43,9 +43,10 @@ Trigger::Trigger(const Trigger& ref)
  */
 void Trigger::update(Hero& hero)
 {
+	// If the hero and trigger are in the same position
 	if (this->pos.x == hero.getPos().x && this->pos.y == hero.getPos().y)
 	{
-		hero.gainEXP(this->exp);
+		hero.gainEXP(this->exp); // Update the hero's exp
 	}
 }
 
@@ -57,8 +58,8 @@ void Trigger::update(Hero& hero)
  */
 void Trigger::setPos(const Position& pos)
 {
-	this->pos.x = pos.x;
-	this->pos.y = pos.y;
+	this->pos.x = pos.x; // Set trigger's x position
+	this->pos.y = pos.y; // Set trigger's y position
 }
 
 /**
@@ -70,36 +71,36 @@ void Trigger::setPos(const Position& pos)
  */
 void Trigger::setPos(int x, int y)
 {
-	this->pos.x = x;
-	this->pos.y = y;
+	this->pos.x = x; // Set trigger's x position
+	this->pos.y = y; // Set trigger's y position
 }
 
 /**
  * Intent: Get the trigger's position
- * Pre: 
+ * Pre: Each time you run an update in main function
  * Post: Return the trigger's position
  */
 Position Trigger::getPos() const
 {
-	return this->pos;
+	return this->pos; // Return trigger's position
 }
 
 /**
  * Intent: Get the trigger's symbol
- * Pre: 
+ * Pre: Each time you run an update in main function
  * Post: Return the trigger's symbol
  */
 string Trigger::getIcon() const
 {
-	return this->icon;
+	return this->icon; // Return trigger's symbol
 }
 
 /**
- * Intent: Get the trigger's position
- * Pre: 
- * Post: Return the 
+ * Intent: Get the total amount of exp obtained by the hero
+ * Pre: Each time you run an update in main function
+ * Post: Return the total amount of exp obtained by the hero
  */
 int Trigger::getExpAmount() const
 {
-	return this->exp;
+	return this->exp; // Return the total amount of exp obtained by the hero
 }
