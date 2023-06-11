@@ -1,39 +1,55 @@
-/*****************************************************************//**
+/***********************************************************************
  * File: Trigger.h
  * Author: B11115029白安睿 B11115046黃健嘉
- * Create Date: 2023/??/??
+ * Create Date: 2023/5/28
  * Editor: B11115029白安睿 B11115046黃健嘉
- * Update Date: 2023/06/11
- * Description: Create a class named Trigger
- *********************************************************************/
+ * Update Date: 2023/6/11
+ * Description: Declare a Trigger class,which has position,icon,and exp
+ * ***********************************************************************/
 #pragma once
-// Include the required library
+ // Include the required library
 #include "Hero.h"
 #include "Position.h"
 #include <string>
 
 using namespace std;
 
+//trigger class
 class Trigger
 {
 private:
-	Position pos; // Save its position
-	string icon; // Save its symbol
-	int exp; // Save its exp
+	// Trigger position
+	Position pos;
+
+	// Trigger icon
+	string icon; 
+
+	// Trugger exp
+	int exp; 
 
 public:
-	Trigger(); // Default constructor
-	Trigger(int x, int y); // Give the initial position to build the constructor
-	Trigger(const Trigger& ref); // Copy constructor
+	// Default constructor
+	Trigger(); 
 
-	void update(Hero& hero); // Update hero's exp
-	void setPos(const Position& pos); // Set the Trigger's position
-	void setPos(int x, int y); // Another method to set the Trigger's position
-	Position getPos() const; // Get the Trigger's position
+	// Give the initial position to build the constructor
+	Trigger(int x, int y); 
+
+	// Copy constructor
+	Trigger(const Trigger& ref); 
+
+	// Update hero's exp
+	void update(Hero& hero); 
+
+	// Set trigger's position
+	void setPos(const Position& pos);
+	void setPos(int x, int y);
+
+	// Get the Trigger's position
+	Position getPos() const; 
 
 	// Get Trigger's icon
 	string getIcon() const;
-	
+
 	// Get the total amount of exp obtained by the hero
 	int getExpAmount() const;
 };
