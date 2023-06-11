@@ -35,6 +35,12 @@ Trigger::Trigger(const Trigger& ref)
 	this->pos = ref.pos;
 }
 
+/**
+ * Intent: If the hero and trigger are in the same position, update the hero's exp
+ * Pre: 
+ * Post: Update hero's exp
+ * pram: Hero& hero
+ */
 void Trigger::update(Hero& hero)
 {
 	if (this->pos.x == hero.getPos().x && this->pos.y == hero.getPos().y)
@@ -43,28 +49,56 @@ void Trigger::update(Hero& hero)
 	}
 }
 
+/**
+ * Intent: Set the position of trigger
+ * Pre: 
+ * Post: Set the position of trigger
+ * pram: const Position& pos
+ */
 void Trigger::setPos(const Position& pos)
 {
 	this->pos.x = pos.x;
 	this->pos.y = pos.y;
 }
 
+/**
+ * Intent: Another method to set the position of trigger
+ * Pre: 
+ * Post: Set the position of trigger
+ * pram1: int x
+ * pram2: int y
+ */
 void Trigger::setPos(int x, int y)
 {
 	this->pos.x = x;
 	this->pos.y = y;
 }
 
+/**
+ * Intent: Get the trigger's position
+ * Pre: 
+ * Post: Return the trigger's position
+ */
 Position Trigger::getPos() const
 {
 	return this->pos;
 }
 
+/**
+ * Intent: Get the trigger's symbol
+ * Pre: 
+ * Post: Return the trigger's symbol
+ */
 string Trigger::getIcon() const
 {
 	return this->icon;
 }
 
+/**
+ * Intent: Get the trigger's position
+ * Pre: 
+ * Post: Return the 
+ */
 int Trigger::getExpAmount() const
 {
 	return this->exp;
