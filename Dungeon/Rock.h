@@ -1,11 +1,11 @@
-/*****************************************************************//**
+/***********************************************************************
  * File: Rock.h
  * Author: B11115029白安睿 B11115046黃健嘉
- * Create Date: 2023/??/??
+ * Create Date: 2023/5/28
  * Editor: B11115029白安睿 B11115046黃健嘉
- * Update Date: 2023/06/11
- * Description: Create a class named Rock and inherit to Creature class
- *********************************************************************/
+ * Update Date: 2023/6/11
+ * Description: Declare a Rock class inheritance to creature,which has position,icon,
+ * ***********************************************************************/
 #pragma once
 #include "Creature.h"
 
