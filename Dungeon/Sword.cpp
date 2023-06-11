@@ -6,6 +6,7 @@ Sword::Sword()
 	this->pos.x = 1;
 	this->pos.y = 1;
 	this->power = 5;
+	this->name = "Sword";
 }
 
 int Sword::getPower()

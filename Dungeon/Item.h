@@ -10,6 +10,7 @@ class Item
 protected:
 	Position pos;
 	string icon;
+	string name;
 public:
 	Item();
 	void setPos(int x, int y);
@@ -17,5 +18,7 @@ public:
 	Position getPos();
 	void setIcon(string& icon);
 	string getIcon();
+	void setName(string& name);
+	string getName();
 	virtual void update(Hero& hero);
 };

@@ -16,6 +16,7 @@ Item::Item()
 	this->icon = "";
 	this->pos.x = 1;
 	this->pos.y = 1;
+	this->name = "Item";
 }
 
 void Item::setPos(int x, int y)
@@ -43,6 +44,16 @@ void Item::setIcon(string& icon)
 string Item::getIcon()
 {
 	return this->icon;
+}
+
+void Item::setName(string& name)
+{
+	this->name = name;
+}
+
+string Item::getName()
+{
+	return this->name;
 }
 
 void Item::update(Hero& hero)

@@ -83,15 +83,15 @@ int main()
 		keyUpdate(gKeyState);
 		endT = clock();
 
-		//if (gKeyState[validInput::ESave])
-		//{
-		//	saveMap();
-		//	gKeyState[validInput::ESave] = false;
-		//}
-		//else if (gKeyState[validInput::ELoad]) {
-		//	loadMap();
-		//	gKeyState[validInput::ELoad] = false;
-		//}
+		if (gKeyState[validInput::ESave])
+		{
+			saveMap();
+			gKeyState[validInput::ESave] = false;
+		}
+		else if (gKeyState[validInput::ELoad]) {
+			loadMap();
+			gKeyState[validInput::ELoad] = false;
+		}
 	}
 	if (level == 1)
 	{
@@ -258,6 +258,8 @@ void drawInfo()
 	cout << "--------------------------------------------------------" << endl;
 	cout << "Use wsad key to move Hero " << hero.getIcon() << endl;
 	cout << "Every time you step on a trigger T, the hero gets 10 exp." << endl;
+	cout << "Every time you step on a sword S, the hero gets 10 attack power." << endl;
+	cout << "Every time you step on a potion P, the hero gets 10 points heal." << endl;
 	cout << "(ESC) Exit (1) Save (2) Load" << endl;
 	cout << "--------------------------------------------------------" << endl;
 }
@@ -548,16 +550,32 @@ void saveMap()
 	{
 		for (int j = 0; j < col; j++)
 		{
-			saveFile << board[i][j];
+			if (board[i][j] == wall)
+			{
+				saveFile << 'W' << " ";
+			}
+			else
+			{
+				saveFile << 'R' << " ";
+			}
 		}
 		saveFile << endl;
 	}
 
-	saveFile << hero.getPos() << " " << hero.getIcon() << " " << hero.getHP() << " " << hero.getHPLimit() << " " << hero.getLevel() << " " << hero.getExp() << " " << hero.getMaxExp() << " " << hero.getPower() << endl;
-	//saveFile << creature.getPos() << " " << creature.getOrgIcon() << " " << creature.getIcon() << " " << creature.getHP() << " " << creature.getHPLimit() << " " << creature.getPower() << " " << endl;
+	saveFile << hero.getPos() << " " << hero.getHP() << " " << hero.getHPLimit() << " " << hero.getLevel() << " " << hero.getExp() << " " << hero.getMaxExp() << " " << hero.getPower() << endl;
+	saveFile << creatures.size() << endl;
+	for (int i = 0; i < creatures.size(); i++)
+	{
+		saveFile << creatures[i]->getName() << " " << creatures[i]->getPos() << " " << creatures[i]->getHP() << " " << creatures[i]->getHPLimit() << " " << creatures[i]->getPower() << endl;
+	}
 	saveFile << triggers.size() << endl;
 	for (int i = 0; i < triggers.size(); i++) {
-		saveFile << triggers[i]->getPos() << " " << triggers[i]->getIcon() << " " << triggers[i]->getExpAmount() << endl;
+		saveFile << triggers[i]->getPos() << endl;
+	}
+	saveFile << items.size() << endl;
+	for (int i = 0; i < items.size(); i++)
+	{
+		saveFile << items[i]->getName() << " " << items[i]->getPos() << endl;
 	}
 	saveFile.close();
 }
@@ -575,7 +593,110 @@ void loadMap()
 	}
 	ifstream saveFile;
 	saveFile.open(input);
+	creatures.clear();
+	triggers.clear();
+	items.clear();
 	saveFile >> row >> col;
 	setMaze();
+	char readin;
+	for (int i = 0; i < row; i++)
+	{
+		for (int j = 0; j < col; j++)
+		{
+			saveFile >> readin;
+			if (readin == 'W')
+			{
+				board[i][j] = wall;
+			}
+			else if (readin == 'R')
+			{
+				board[i][j] = road;
+			}
+		}
+	}
+	Position hPos;
+	int hHP = 0, hLimitHp = 0, hLevel = 0, hCurrExp = 0, hMaxExp = 0, hPower = 0;
+	saveFile >> hPos >> hHP >> hLimitHp >> hLevel >> hCurrExp >> hMaxExp >> hPower;
+	hero.setPos(hPos);
+	hero.setHP(hHP);
+	hero.setHPLimit(hLimitHp);
+	hero.setLevel(hLevel);
+	hero.setExp(hCurrExp);
+	hero.SetMaxExp(hMaxExp);
+	hero.setPower(hPower);
+	int creatureSize = 0;
+	saveFile >> creatureSize;
+	for (int i = 0; i < creatureSize; i++)
+	{
+		string creatureName;
+		Position cPos;
+		int power = 0, hp = 0, limitHP = 0;
+		saveFile >> creatureName;
+		if (creatureName == "Creature")
+		{
+			creature = new Creature();
+			saveFile >> cPos;
+			creature->setPos(cPos);
+			saveFile >> hp >> limitHP >> power;
+			creature->setHP(hp);
+			creature->setHPLimit(limitHP);
+			creature->setPower(power);
+			creatures.push_back(creature);
 
+		}
+		else if (creatureName == "Ghost")
+		{
+			ghost = new Ghost();
+			saveFile >> cPos;
+			ghost->setPos(cPos);
+			saveFile >> hp >> limitHP >> power;
+			ghost->setHP(hp);
+			ghost->setHPLimit(limitHP);
+			ghost->setPower(power);
+			creatures.push_back(ghost);
+		}
+		else if (creatureName == "Rock")
+		{
+			rock = new Rock();
+			saveFile >> cPos;
+			rock->setPos(cPos);
+			saveFile >> hp >> limitHP >> power;
+			rock->setHP(hp);
+			rock->setHPLimit(limitHP);
+			rock->setPower(power);
+			creatures.push_back(rock);
+		}
+	}
+	int triggerSize = 0;
+	saveFile >> triggerSize;
+	for (int i = 0; i < triggerSize; i++)
+	{
+		Trigger* trigger = new Trigger();
+		Position tPos;
+		saveFile >> tPos;
+		trigger->setPos(tPos);
+		triggers.push_back(trigger);
+	}
+	int itemSize = 0;
+	string itemName;
+	saveFile >> itemSize;
+	for (int i = 0; i < itemSize; i++)
+	{
+		saveFile >> itemName;
+		Position iPos;
+		if (itemName == "Sword")
+		{
+			sword = new Sword();
+			saveFile >> iPos;
+			sword->setPos(iPos);
+			items.push_back(sword);
+		}
+		if (itemName == "Potion")
+		{
+			potion = new Potion();
+			saveFile >> iPos;
+			potion->setPos(iPos);
+			items.push_back(potion);
+		}
+	}
 }
