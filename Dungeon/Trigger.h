@@ -24,7 +24,7 @@ private:
 public:
 	Trigger(); // Default constructor
 	Trigger(int x, int y); // Give the initial position to build the constructor
-	Trigger(const Trigger& ref); // Give the initial data to build the constructor
+	Trigger(const Trigger& ref); // Copy constructor
 
 	void update(Hero& hero); // Update hero's exp
 	void setPos(const Position& pos); // Set the Trigger's position
