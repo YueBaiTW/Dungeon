@@ -13,6 +13,9 @@
 class Rock:public Creature
 {
 public:
-	Rock(); //Default constructor
-	void update(Hero& hero) override; //Update the hero's HP
+	//Default constructor
+	Rock(); 
+	
+	//overwrite the update function
+	void update(Hero& hero) override;
 };
