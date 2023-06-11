@@ -4,18 +4,21 @@
  * Create Date: 2023/??/??
  * Editor: B11115029白安睿 B11115046黃健嘉
  * Update Date: 2023/06/11
- * Description: Create a class named Trigger
+ * Description: Implementing the functions in Trigger class
  *********************************************************************/
 #include "Trigger.h"
 
+// Default constructor
 Trigger::Trigger()
 {
+	// Initialize icon and exp
 	this->icon = "¢â";
 	this->exp = 10;
 }
 
 Trigger::Trigger(int x, int y)
 {
+	// Initialize icon and exp and set initial position
 	this->icon = "¢â";
 	this->exp = 10;
 	this->pos.x = x;
@@ -24,6 +27,7 @@ Trigger::Trigger(int x, int y)
 
 Trigger::Trigger(const Trigger& ref)
 {
+	// set icon, exp and position
 	this->icon = ref.icon;
 	this->exp = ref.exp;
 	this->pos = ref.pos;
